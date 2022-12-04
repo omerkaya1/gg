@@ -1,0 +1,40 @@
+{
+  "global": {
+    "ServiceName": "New Awesome Service",
+    "ModuleName": "github.com/omerkaya1/new-awesome-service"
+  },
+  "files": [
+    {
+      "name": "main.go",
+      "template": "main.tmpl",
+      "path": "",
+      "local": {
+        "PrintThis": true
+      }
+    },
+    {
+      "name": "go.mod",
+      "template": "go.mod.tmpl",
+      "path": "",
+      "local": {
+        "GoVersion": "1.19"
+      }
+    }
+  ],
+  "commands": [
+    {
+      "name": "gofmt",
+      "args": [
+        "-s"
+      ]
+    },
+    {
+      "name": "go",
+      "args": [
+        "mod",
+        "tidy",
+        "-e"
+      ]
+    }
+  ]
+}

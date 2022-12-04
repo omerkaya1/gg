@@ -1,0 +1,14 @@
+package main
+
+import (
+    "fmt"
+)
+
+const (
+	serviceName = "{{.Global.ServiceName}}"
+)
+
+func main() { {{if .Local.PrintThis}}
+    fmt.Printf("this is: "){{end}}
+    fmt.Println(serviceName)
+}
