@@ -22,18 +22,23 @@ type (
 		Path          string
 	}
 	Config struct {
-		Files []File     `json:"files,omitempty"`
-		Cmds  []Commands `json:"commands,omitempty"`
+		Global map[string]any `json:"global"`
+		Files  []File         `json:"files,omitempty"`
+		Cmds   []Commands     `json:"commands,omitempty"`
 	}
 	File struct {
-		Name     string                 `json:"name"`
-		Path     string                 `json:"path"`
-		Template string                 `json:"template"`
-		Local    map[string]interface{} `json:"local"`
+		Name     string         `json:"name"`
+		Path     string         `json:"path"`
+		Template string         `json:"template"`
+		Local    map[string]any `json:"local"`
 	}
 	Commands struct {
 		Name string   `json:"name"`
 		Args []string `json:"args"`
+	}
+	Values struct {
+		Global map[string]any
+		Local  map[string]any
 	}
 )
 
@@ -97,7 +102,7 @@ func main() {
 		return
 	}
 	for _, file := range cfg.Files {
-		if err = processFile(tmpl, projectRootPath, &file); err != nil {
+		if err = processFile(tmpl, projectRootPath, cfg.Global, &file); err != nil {
 			fmt.Printf("fatal error: %+v\n", err)
 			return
 		}
@@ -114,7 +119,7 @@ func main() {
 	}
 }
 
-func processFile(tmpl *template.Template, projectRootPath string, data *File) error {
+func processFile(tmpl *template.Template, projectRootPath string, global map[string]any, data *File) error {
 	dir := fmt.Sprintf("%s/%s", projectRootPath, data.Path)
 	if err := os.MkdirAll(dir, mod); err != nil {
 		return fmt.Errorf("failure to create %s directory: %s", dir, err)
@@ -124,7 +129,7 @@ func processFile(tmpl *template.Template, projectRootPath string, data *File) er
 	if err != nil {
 		return fmt.Errorf("failure to create %s file: %s", file, err)
 	}
-	if err = tmpl.ExecuteTemplate(f, data.Template, data.Local); err != nil {
+	if err = tmpl.ExecuteTemplate(f, data.Template, Values{Global: global, Local: data.Local}); err != nil {
 		return fmt.Errorf("failure to populate %s file: %s", data.Name, err)
 	}
 	return nil
