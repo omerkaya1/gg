@@ -23,6 +23,10 @@ simple utility to facilitate mundane work by generating code based on templates 
             output destination path (shortened)
         -output string
             output destination path
+        -s
+            print files to STDOUT and prepend them with a file name (shortened)
+        -separate
+            print files to STDOUT and prepend them with a file name
         -t string
             path to templates (shortened)
         -templates string
@@ -37,6 +41,12 @@ Placeholders for global variables should be prefixed with _.Global_ pattern, whi
 
 
 ## Example
+
+By default, `gg` prints its output to STDOUT.
+
+Otherwise, use `-o path` to specify output directory.
+
+***
 
 Suppose we have this setup:
 
