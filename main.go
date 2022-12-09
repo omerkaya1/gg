@@ -16,9 +16,10 @@ import (
 
 type (
 	Args struct {
+		Separator     bool
 		PathToConfig  string
 		TemplatesPath string
-		Path          string
+		OutputPath    string
 	}
 	Config struct {
 		Global map[string]any `json:"global"`
@@ -47,12 +48,14 @@ var (
 )
 
 func (a *Args) valid() error {
-	stat, err := os.Stat(a.Path)
-	if err != nil {
-		return fmt.Errorf("incorrect path: %s", err)
+	if a.Separator && a.OutputPath != "" {
+		return fmt.Errorf("wrong argumnets: cannot use STDOUT and output dir for file generation")
 	}
-	if !stat.IsDir() {
-		return fmt.Errorf("%s is not a directory", a.Path)
+	if a.OutputPath != "" {
+		if err := os.MkdirAll(args.OutputPath, mod); err != nil {
+			fmt.Printf("failure to create cache directory: %s", err)
+			return err
+		}
 	}
 	return nil
 }
@@ -61,8 +64,8 @@ func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGKILL, syscall.SIGTERM, syscall.SIGHUP)
 	defer cancel()
 
-	flag.StringVar(&args.Path, "output", "", "output destination path")
-	flag.StringVar(&args.Path, "o", "", "output destination path (shortened)")
+	flag.StringVar(&args.OutputPath, "output", "", "output destination path")
+	flag.StringVar(&args.OutputPath, "o", "", "output destination path (shortened)")
 	flag.StringVar(&args.PathToConfig, "c", "", "path to config (shortened)")
 	flag.StringVar(&args.PathToConfig, "configuration", "", "path to config")
 	flag.StringVar(&args.TemplatesPath, "t", "", "path to templates (shortened)")
@@ -101,7 +104,7 @@ func main() {
 	if len(cfg.Cmds) > 0 {
 		for _, c := range cfg.Cmds {
 			cmd := exec.CommandContext(ctx, c.Name, c.Args...)
-			cmd.Dir = args.Path
+			cmd.Dir = args.OutputPath
 			if b, err := cmd.CombinedOutput(); err != nil {
 				fmt.Printf("Output: %+v\nError: %+v\n", string(b), err)
 				return
@@ -110,11 +113,23 @@ func main() {
 	}
 }
 
+const separator = "---%s"
+
 func processFile(tmpl *template.Template, global map[string]any, file *File) error {
-	if err := os.MkdirAll(path.Join(args.Path, file.Path), mod); err != nil {
-		return fmt.Errorf("failure to create %s directory: %s", path.Join(args.Path, file.Path), err)
+	var err error
+	if args.OutputPath == "" {
+		if args.Separator {
+			_, _ = fmt.Fprintf(os.Stdout, separator, file.Name)
+		}
+		if err = tmpl.ExecuteTemplate(os.Stdout, file.Template, Values{Global: global, Local: file.Local}); err != nil {
+			return fmt.Errorf("failure to populate %s file: %s", file.Name, err)
+		}
+		return nil
 	}
-	f, err := os.Create(path.Join(args.Path, file.Path, file.Name))
+	if err = os.MkdirAll(path.Join(args.OutputPath, file.Path), mod); err != nil {
+		return fmt.Errorf("failure to create %s directory: %s", path.Join(args.OutputPath, file.Path), err)
+	}
+	f, err := os.Create(path.Join(args.OutputPath, file.Path, file.Name))
 	if err != nil {
 		return fmt.Errorf("failure to create %s file: %s", file, err)
 	}
