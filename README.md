@@ -19,14 +19,10 @@ simple utility to facilitate mundane work by generating code based on templates 
             path to config (shortened)
         -configuration string
             path to config
-        -n string
-            project name (shortened)
         -o string
             output destination path (shortened)
         -output string
             output destination path
-        -project-name string
-            project name
         -t string
             path to templates (shortened)
         -templates string
@@ -122,12 +118,12 @@ _json config file_
 
 Running:
 
-    gg -c config.json -n new-awasome-project -o /destination/path -t /path/to/templates
+    gg -c config.json -o /destination/path -t /path/to/templates
 
 Produces:
 
 ```
-$ ls /destination/path/new-awasome-project 
+$ ls /destination/path
 go.mod  main.go
 
 ```

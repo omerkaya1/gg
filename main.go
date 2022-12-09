@@ -18,7 +18,6 @@ type (
 	Args struct {
 		PathToConfig  string
 		TemplatesPath string
-		ProjectName   string
 		Path          string
 	}
 	Config struct {
@@ -64,8 +63,6 @@ func main() {
 
 	flag.StringVar(&args.Path, "output", "", "output destination path")
 	flag.StringVar(&args.Path, "o", "", "output destination path (shortened)")
-	flag.StringVar(&args.ProjectName, "project-name", "", "project name")
-	flag.StringVar(&args.ProjectName, "n", "", "project name (shortened)")
 	flag.StringVar(&args.PathToConfig, "c", "", "path to config (shortened)")
 	flag.StringVar(&args.PathToConfig, "configuration", "", "path to config")
 	flag.StringVar(&args.TemplatesPath, "t", "", "path to templates (shortened)")
