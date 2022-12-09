@@ -166,3 +166,10 @@ go 1.19
 ```
 
 See [examples](examples) for more details.
+
+## Uninstall
+
+Simple deletion of the binary should suffice:
+```shell
+rm $(which gg)
+```
