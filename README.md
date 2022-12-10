@@ -167,6 +167,16 @@ go 1.19
 
 See [examples](examples) for more details.
 
+You can achieve the same result by just piping data to the programme:
+
+```shell
+cat examples/config.json | gg -t examples
+```
+or
+```shell
+gg -t examples < examples/config.json
+```
+
 ## Uninstall
 
 Simple deletion of the binary should suffice:
