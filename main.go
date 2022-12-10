@@ -51,12 +51,6 @@ func (a *Args) valid() error {
 	if a.Separator && a.OutputPath != "" {
 		return fmt.Errorf("wrong argumnets: cannot use STDOUT and output dir for file generation")
 	}
-	if a.OutputPath != "" {
-		if err := os.MkdirAll(args.OutputPath, mod); err != nil {
-			fmt.Printf("failure to create cache directory: %s", err)
-			return err
-		}
-	}
 	return nil
 }
 
@@ -95,6 +89,14 @@ func main() {
 		fmt.Printf("fatal error: %+v\n", err)
 		return
 	}
+
+	// create an output dir if necessary
+	if args.OutputPath != "" {
+		if err = os.MkdirAll(args.OutputPath, mod); err != nil {
+			log.Fatalf("failure to create cache directory: %s", err)
+		}
+	}
+
 	for _, file := range cfg.Files {
 		if err = processFile(tmpl, cfg.Global, &file); err != nil {
 			fmt.Printf("fatal error: %+v\n", err)
