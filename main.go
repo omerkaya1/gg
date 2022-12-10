@@ -71,12 +71,6 @@ func main() {
 		return
 	}
 
-	// import templates
-	tmpl, err := template.New("main").ParseFS(os.DirFS(args.TemplatesPath), "*.tmpl")
-	if err != nil {
-		log.Fatal(fmt.Errorf("failure to create the main.go file: %s", err))
-	}
-
 	f, err := os.Open(args.PathToConfig)
 	if err != nil {
 		fmt.Printf("fatal error: %+v\n", err)
@@ -88,6 +82,12 @@ func main() {
 	if err = json.NewDecoder(f).Decode(&cfg); err != nil {
 		fmt.Printf("fatal error: %+v\n", err)
 		return
+	}
+
+	// import templates
+	tmpl, err := template.New("main").ParseFS(os.DirFS(args.TemplatesPath), "*.tmpl")
+	if err != nil {
+		log.Fatal(fmt.Errorf("failure to create the main.go file: %s", err))
 	}
 
 	// create an output dir if necessary
