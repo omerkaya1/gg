@@ -24,7 +24,7 @@ type (
 	Config struct {
 		Global map[string]any `json:"global"`
 		Files  []File         `json:"files,omitempty"`
-		Cmds   []Commands     `json:"commands,omitempty"`
+		Cmds   []Command      `json:"commands,omitempty"`
 	}
 	File struct {
 		Name     string         `json:"name"`
@@ -32,7 +32,7 @@ type (
 		Template string         `json:"template"`
 		Local    map[string]any `json:"local"`
 	}
-	Commands struct {
+	Command struct {
 		Name string   `json:"name"`
 		Args []string `json:"args"`
 	}
@@ -67,33 +67,20 @@ func main() {
 	flag.Parse()
 
 	if err := args.valid(); err != nil {
+		log.Fatalf("fatal error: %+v\n", err)
+	}
+
+	f, err := os.Open(args.PathToConfig)
+	if err != nil {
 		fmt.Printf("fatal error: %+v\n", err)
 		return
 	}
+	defer f.Close()
 
-	var (
-		f   = os.Stdin
-		err error
-	)
-	if args.PathToConfig == "" {
-		stat, err := f.Stat()
-		if err != nil {
-			log.Fatalf("fatal error: %+v\n", err)
-		}
-		if (stat.Mode() & os.ModeCharDevice) != 0 {
-			log.Fatalln("fatal error: no input from stdin")
-		}
-	} else {
-		if f, err = os.Open(args.PathToConfig); err != nil {
-			log.Fatalf("fatal error: %+v\n", err)
-		}
-		defer f.Close()
-	}
-
+	// read in config
 	var cfg Config
 	if err = json.NewDecoder(f).Decode(&cfg); err != nil {
-		fmt.Printf("fatal error: %+v\n", err)
-		return
+		log.Fatalf("fatal error: %+v\n", err)
 	}
 
 	// import templates
@@ -109,19 +96,20 @@ func main() {
 		}
 	}
 
+	// iterate over specified files
 	for _, file := range cfg.Files {
 		if err = processFile(tmpl, cfg.Global, &file); err != nil {
-			fmt.Printf("fatal error: %+v\n", err)
-			return
+			log.Fatalf("fatal error: %+v\n", err)
 		}
 	}
+
+	// run commands
 	if len(cfg.Cmds) > 0 {
 		for _, c := range cfg.Cmds {
 			cmd := exec.CommandContext(ctx, c.Name, c.Args...)
 			cmd.Dir = args.OutputPath
 			if b, err := cmd.CombinedOutput(); err != nil {
-				fmt.Printf("Output: %+v\nError: %+v\n", string(b), err)
-				return
+				log.Fatalf("Output: %+v\nError: %+v\n", string(b), err)
 			}
 		}
 	}
