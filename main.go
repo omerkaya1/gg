@@ -71,12 +71,24 @@ func main() {
 		return
 	}
 
-	f, err := os.Open(args.PathToConfig)
-	if err != nil {
-		fmt.Printf("fatal error: %+v\n", err)
-		return
+	var (
+		f   = os.Stdin
+		err error
+	)
+	if args.PathToConfig == "" {
+		stat, err := f.Stat()
+		if err != nil {
+			log.Fatalf("fatal error: %+v\n", err)
+		}
+		if (stat.Mode() & os.ModeCharDevice) != 0 {
+			log.Fatalln("fatal error: no input from stdin")
+		}
+	} else {
+		if f, err = os.Open(args.PathToConfig); err != nil {
+			log.Fatalf("fatal error: %+v\n", err)
+		}
+		defer f.Close()
 	}
-	defer f.Close()
 
 	var cfg Config
 	if err = json.NewDecoder(f).Decode(&cfg); err != nil {
