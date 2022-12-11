@@ -9,6 +9,10 @@ simple utility to facilitate mundane work by generating code based on templates 
 2. [text/template](https://pkg.go.dev/text/template) package and its semantics;
 3. template files should end with `.tmpl`.
 
+## Requirements
+
+The programme needs **Go ^1.18** to be compiled.
+
 ## Installation
 
     go install github.com/omerkaya1/gg@latest
