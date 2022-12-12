@@ -95,6 +95,13 @@ func main() {
 		log.Fatalf("fatal error: %+v\n", err)
 	}
 
+	// empty template path, assume that templates are inside the working directory
+	if args.TemplatesPath == "" {
+		if args.TemplatesPath, err = os.Getwd(); err != nil {
+			log.Fatalf("fatal error: %+v\n", err)
+		}
+	}
+
 	// import templates
 	tmpl, err := template.ParseFS(os.DirFS(args.TemplatesPath), "*.tmpl")
 	if err != nil {
