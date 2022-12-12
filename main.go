@@ -96,7 +96,7 @@ func main() {
 	}
 
 	// import templates
-	tmpl, err := template.New("main").ParseFS(os.DirFS(args.TemplatesPath), "*.tmpl")
+	tmpl, err := template.ParseFS(os.DirFS(args.TemplatesPath), "*.tmpl")
 	if err != nil {
 		log.Fatal(fmt.Errorf("failure to create the main.go file: %s", err))
 	}
