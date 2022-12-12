@@ -48,6 +48,8 @@ Placeholders for global variables should be prefixed with _.Global_ pattern, whi
 
 By default, `gg` prints its output to STDOUT.
 
+If the template path is not provided, `gg` looks for templates in the working directory it was called.
+
 Otherwise, use `-o path` to specify output directory.
 
 ***
