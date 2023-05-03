@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	serviceName = "{{.Global.ServiceName}}"
+	serviceName = "{{.Global.ServiceName | ToUpper}}"
 )
 
 func main() { {{if .Local.PrintThis}}
