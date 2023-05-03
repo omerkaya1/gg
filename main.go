@@ -10,6 +10,7 @@ import (
 	"os/exec"
 	"os/signal"
 	"path"
+	"strings"
 	"syscall"
 	"text/template"
 )
@@ -102,16 +103,22 @@ func main() {
 		}
 	}
 
+	funcMap := template.FuncMap{
+		"ToUpper": strings.ToUpper,
+		"ToLower": strings.ToLower,
+		"ToTitle": strings.ToTitle,
+	}
+
 	// import templates
-	tmpl, err := template.ParseFS(os.DirFS(args.TemplatesPath), "*.tmpl")
+	tmpl, err := template.New("").Funcs(funcMap).ParseFS(os.DirFS(args.TemplatesPath), "*.tmpl")
 	if err != nil {
-		log.Fatal(fmt.Errorf("failure to create the main.go file: %s", err))
+		log.Fatal(fmt.Errorf("failure to initialise template: %s", err))
 	}
 
 	// create an output dir if necessary
 	if args.OutputPath != "" {
 		if err = os.MkdirAll(args.OutputPath, mod); err != nil {
-			log.Fatalf("failure to create cache directory: %s", err)
+			log.Fatalf("failure to create output directory: %s", err)
 		}
 	}
 
