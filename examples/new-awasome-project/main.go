@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	serviceName = "New Awesome Service"
+	serviceName = "NEW AWESOME SERVICE"
 )
 
 func main() {

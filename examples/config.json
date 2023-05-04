@@ -1,6 +1,6 @@
 {
   "global": {
-    "ServiceName": "NEW AWESOME SERVICE",
+    "ServiceName": "new awesome service",
     "ModuleName": "github.com/omerkaya1/new-awesome-service"
   },
   "files": [
