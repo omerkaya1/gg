@@ -61,10 +61,10 @@ func main() {
 
 	flag.StringVar(&args.OutputPath, "output", "", "output destination path")
 	flag.StringVar(&args.OutputPath, "o", "", "output destination path (shortened)")
-	flag.StringVar(&args.PathToConfig, "c", "", "path to config (shortened)")
 	flag.StringVar(&args.PathToConfig, "configuration", "", "path to config")
+	flag.StringVar(&args.PathToConfig, "c", "", "path to config (shortened)")
+	flag.StringVar(&args.TemplatesPath, "templates", "", "path to templates")
 	flag.StringVar(&args.TemplatesPath, "t", "", "path to templates (shortened)")
-	flag.StringVar(&args.TemplatesPath, "templates", "", "path to config")
 	flag.Parse()
 
 	if err := args.valid(); err != nil {
