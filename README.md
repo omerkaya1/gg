@@ -17,24 +17,21 @@ The programme needs **Go ^1.18** to be compiled.
 
     go install github.com/omerkaya1/gg@latest
 
-## Usage
-    Usage of gg:
-        -c string 
-            path to config (shortened)
-        -configuration string
-            path to config
-        -o string
-            output destination path (shortened)
-        -output string
-            output destination path
-        -s
-            print files to STDOUT and prepend them with a file name (shortened)
-        -separate
-            print files to STDOUT and prepend them with a file name
-        -t string
-            path to templates (shortened)
-        -templates string
-            path to config
+## Usage of gg:
+	-c string
+		path to config (shortened)
+	-configuration string
+		path to config
+	-o string
+		output destination path (shortened)
+	-output string
+		output destination path
+	-separator
+		print separator between files
+	-t string
+		path to templates (shortened)
+	-templates string
+		path to templates
 
 ## Config file semantics
 
