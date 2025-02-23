@@ -15,3 +15,6 @@
 # vendor/
 .idea
 .vscode
+
+# Internal files
+ROADMAP.md
