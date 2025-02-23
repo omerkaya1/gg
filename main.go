@@ -107,6 +107,7 @@ func main() {
 		"ToUpper": strings.ToUpper,
 		"ToLower": strings.ToLower,
 		"ToTitle": strings.ToTitle,
+		"Trim":    strings.Trim,
 	}
 
 	// import templates
