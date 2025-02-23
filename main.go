@@ -65,6 +65,7 @@ func main() {
 	flag.StringVar(&args.PathToConfig, "c", "", "path to config (shortened)")
 	flag.StringVar(&args.TemplatesPath, "templates", "", "path to templates")
 	flag.StringVar(&args.TemplatesPath, "t", "", "path to templates (shortened)")
+	flag.BoolVar(&args.Separator, "separator", false, "print separator between files")
 	flag.Parse()
 
 	if err := args.valid(); err != nil {
@@ -113,7 +114,7 @@ func main() {
 	// import templates
 	tmpl, err := template.New("").Funcs(funcMap).ParseFS(os.DirFS(args.TemplatesPath), "*.tmpl")
 	if err != nil {
-		log.Fatal(fmt.Errorf("failure to initialise template: %s", err))
+		log.Fatalf("failure to initialise template: %s\n", err)
 	}
 
 	// create an output dir if necessary
